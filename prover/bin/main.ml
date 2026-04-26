@@ -27,5 +27,9 @@ let () =
   test_prove [(PA, A); (PB, B)] (Prod (A, B)) (Some (Pair (PA, PB)));
   test_prove [(PA, A); (PB, B)] (Prod (A, A)) (Some (Pair (PA, PA)));
   test_prove [(Pair (PA, PB), Prod (A, B))] (Prod (A, B)) (Some (Pair (PA, PB)));
-  test_prove [(Pair (PA, PB), Prod (A, B))] (Prod (B, A)) (Some (Pair (Snd (Pair (PA, PB)), (Fst (Pair (PA, PB))))))
+  test_prove [(Pair (PA, PB), Prod (A, B))] (Prod (B, A)) (Some (Pair (Snd (Pair (PA, PB)), (Fst (Pair (PA, PB))))));
+  test_prove
+    [(Pair (PA, Pair (PA, PB)), Prod (A, Prod (A, B)))]
+    (Prod (B, A))
+    (Some (Pair (Snd (Snd (Pair (PA, (Pair (PA, PB))))), Fst (Pair (PA, (Pair (PA, PB)))))))
 

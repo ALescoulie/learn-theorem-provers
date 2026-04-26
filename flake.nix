@@ -28,9 +28,9 @@
               [
                 pkgs.ocaml
                 pkgs.dune
+                pkgs.ocamlPackages.utop
                 pkgs.ocamlPackages.findlib
                 pkgs.ocamlPackages.odig
-                pkgs.ocamlPackages.odoc
                 pkgs.ocamlPackages.ocaml-lsp
                 pkgs.ocamlPackages.ppx_deriving
               ];

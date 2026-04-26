@@ -1,4 +1,5 @@
 (executable
  (public_name theorem-prover)
  (name main)
- (libraries prover))
+ (libraries prover)
+ (modes byte))

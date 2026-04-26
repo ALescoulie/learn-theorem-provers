@@ -29,6 +29,11 @@ let rec is_equal (m : proof) (a : prop) : bool =
   | (Pair (n, p), Prod (b, c)) -> (is_equal n b) && (is_equal p c)
   | _ -> false
 
+let is_pair (g : proof * prop) : bool =
+  match g with
+  | (_, Prod _) -> true
+  | _ -> false
+
 let rec is_fst_in_pair (g : proof * prop) (p : prop) : bool =
   match (g, p) with
   | (((Pair (m, _)), Prod (a, _)), p') -> is_equal m p' && a = p'
@@ -49,6 +54,32 @@ let rec prove (g : (proof * prop) list) (p : prop) : proof option =
       | (Some m, Some n) -> Some (Pair (m, n))
       | _ -> None
       end
+    | _ ->
+      let not_pairs = List.filter (fun x -> is_pair x |> not) g in
+      match List.filter is_pair g with
+      | (Pair (m, n) as pair, Prod (a, b)) :: t ->
+        let fst = (Fst pair, a) in
+        let snd = (Snd pair, b) in
+        prove (List.append [fst; snd] not_pairs |> (fun x -> List.append x t)) p
+      | (Fst (Pair _) as inner, Prod (a, b)) :: t ->
+        let fst = (Fst inner, a) in
+        let snd = (Snd inner, b) in
+        let not_fst = List.append [fst; snd] t in
+        prove (List.append not_pairs not_fst) p
+      | (Snd (Pair _) as inner, Prod (a, b)) :: t ->
+        let fst = (Fst inner, a) in
+        let snd = (Snd inner, b) in
+        let not_fst = List.append [fst; snd] t in
+        prove (List.append not_pairs not_fst) p
+      | _ -> None
+
+    (*
+    match p with
+    | Prod (a, b) ->
+      begin match (prove g a, prove g b) with
+      | (Some m, Some n) -> Some (Pair (m, n))
+      | _ -> None
+      end
     | p' -> 
       begin match List.filter (fun x -> is_fst_in_pair x p') g with
       | (Pair (m, n), Prod (a, _)) :: t when (is_equal m p') && (a = p') ->
@@ -57,9 +88,9 @@ let rec prove (g : (proof * prop) list) (p : prop) : proof option =
         begin match List.filter (fun x-> is_snd_in_pair x p') g with
         | (Pair (m, n), Prod (_, b)) :: t when (is_equal n p') && (b = p') ->
           Some (Snd (Pair (m, n)))
-        | _ -> None
+        | begin match List.filter  -> None
         end
       end
-      
+      *)
 
 
