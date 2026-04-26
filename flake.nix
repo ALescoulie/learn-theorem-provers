@@ -33,6 +33,8 @@
                 pkgs.ocamlPackages.odig
                 pkgs.ocamlPackages.ocaml-lsp
                 pkgs.ocamlPackages.ppx_deriving
+                pkgs.ghc
+                pkgs.cabal-install
               ];
           };
         });
