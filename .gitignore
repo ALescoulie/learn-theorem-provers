@@ -1,2 +1,4 @@
 prover/_build
+haskell/dist-newstyle
+haskell/tags
 .direnv
