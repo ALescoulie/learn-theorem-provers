@@ -1,0 +1,3 @@
+(library
+ (name prover)
+ (preprocess (pps ppx_deriving.show)))
