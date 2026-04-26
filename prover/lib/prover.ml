@@ -69,8 +69,8 @@ let rec prove (g : (proof * prop) list) (p : prop) : proof option =
       | (Snd (Pair _) as inner, Prod (a, b)) :: t ->
         let fst = (Fst inner, a) in
         let snd = (Snd inner, b) in
-        let not_fst = List.append [fst; snd] t in
-        prove (List.append not_pairs not_fst) p
+        let not_snd = List.append [fst; snd] t in
+        prove (List.append not_pairs not_snd) p
       | _ -> None
 
     (*
