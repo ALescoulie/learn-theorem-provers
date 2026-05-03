@@ -23,24 +23,24 @@ data Proof
 
 type Ctx = [(Proof, Prop)]
 
-idRule :: Ctx -> Prop -> Maybe Proof
-idRule g p = lookup p (map swap g)
+idRule :: Ctx -> Prop -> [Proof]
+idRule g p = [m | (m, p') <- g, p' == p]
 
-andRight :: Ctx -> Prop -> Maybe Proof
+andRight :: Ctx -> Prop -> [Proof]
 andRight g (Prod a b) = do
   m <- prove g a
   n <- prove g b
   return $ Pair m n
-andRight _ _ = Nothing
+andRight _ _ = []
 
-funRight :: Ctx -> Prop -> Maybe Proof
+funRight :: Ctx -> Prop -> [Proof]
 funRight g (Fun a b) = do
   let x = "x" ++ show (length g)
   m <- prove ((Var x,a):g) b
   return $ Lam x m
-funRight _ _ = Nothing
+funRight _ _ = []
 
-rightRules :: Ctx -> Prop -> Maybe Proof
+rightRules :: Ctx -> Prop -> [Proof]
 rightRules g a =
       andRight g a
   <|> funRight g a
@@ -57,34 +57,39 @@ isProd :: Prop -> Bool
 isProd (Prod _ _) = True
 isProd _ = False
 
-andLeft1 :: Ctx -> Prop -> Maybe Proof
-andLeft1 g c = do
-  ((m, Prod a b), g') <- grab (isProd.snd) g
-  prove ((Fst m, a):g') c
+andLeft1 :: Ctx -> Prop -> [Proof]
+andLeft1 g c = 
+  case grab (isProd.snd) g of
+  Just ((m, Prod a b), g') -> do
+    prove ((Fst m, a):g') c
+  _ -> []
 
-andLeft2 :: Ctx -> Prop -> Maybe Proof
-andLeft2 g c = do
-  ((m, Prod a b), g') <- grab (isProd.snd) g
-  prove ((Snd m, b):g') c
+andLeft2 :: Ctx -> Prop -> [Proof]
+andLeft2 g c =
+  case grab (isProd.snd) g of
+    Just ((m, Prod a b), g') -> do
+      prove ((Snd m, b):g') c
+    _ -> []
 
 isFun :: Prop -> Bool
 isFun (Fun _ _) = True
 isFun _ = False
 
-funLeft :: Ctx -> Prop -> Maybe Proof
-funLeft g c = do
-  ((m, Fun a b), g') <- grab (isFun.snd) g
-  n <- prove g' a
-  p <- prove ((App m n, b) : g') c
-  return p
+funLeft :: Ctx -> Prop -> [Proof]
+funLeft g c =
+  case grab (isFun.snd) g of
+    Just ((m, Fun a b), g') -> do
+      n <- prove g' a
+      prove ((App m n, b) : g') c
+    _ -> []
 
-leftRules :: Ctx -> Prop -> Maybe Proof
+leftRules :: Ctx -> Prop -> [Proof]
 leftRules g p =
       andLeft1 g p
   <|> andLeft2 g p
   <|> funLeft g p
 
-prove :: Ctx -> Prop -> Maybe Proof
+prove :: Ctx -> Prop -> [Proof]
 prove g p =
   idRule g p <|> rightRules g p <|> leftRules g p
 
@@ -101,4 +106,6 @@ main = do
   print $ prove [] (Fun A (Fun (Fun A B) B))
   print $ prove [(Var "x", Prod A (Prod B C))] (Prod (Prod A B) C)
   print $ prove [(Var "f", Fun (Prod A B) C)] (Fun A (Fun B C))
+  print $ prove [(Var "x", A), (Var "y", A)] A
+  print $ prove [(Var "x", Prod A B), (Var "y", Fun B A)] A
 
