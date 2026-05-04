@@ -60,9 +60,9 @@ isProd _ = False
 andLeft1 :: Ctx -> Prop -> [Proof]
 andLeft1 g c = 
   case grab (isProd.snd) g of
-  Just ((m, Prod a b), g') -> do
-    prove ((Fst m, a):g') c
-  _ -> []
+    Just ((m, Prod a b), g') -> do
+      prove ((Fst m, a):g') c
+    _ -> []
 
 andLeft2 :: Ctx -> Prop -> [Proof]
 andLeft2 g c =
