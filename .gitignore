@@ -2,3 +2,6 @@ prover/_build
 haskell/dist-newstyle
 haskell/tags
 .direnv
+interactive/.vite
+interactive/dist
+interactive/node_modules

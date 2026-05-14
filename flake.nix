@@ -35,6 +35,7 @@
                 pkgs.ocamlPackages.ppx_deriving
                 pkgs.ghc
                 pkgs.cabal-install
+                pkgs.nodejs
               ];
           };
         });
