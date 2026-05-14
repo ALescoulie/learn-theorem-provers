@@ -1,0 +1,17 @@
+{
+  "name": "hello-ts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0"
+  },
+  "dependencies": {
+    "@doeixd/combi-parse": "^0.0.6",
+    "events": "^3.3.0"
+  }
+}
