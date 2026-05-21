@@ -14,7 +14,7 @@ export type Term =
   | { tag: "Snd"; m: Term };
 
 
-export function prettyPrintTerm(ast: Term) {
+export function prettyTerm(ast: Term) {
   switch (ast.tag) {
     case "Lit":
       return ast.value.toString();
